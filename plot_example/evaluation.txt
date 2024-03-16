@@ -1,0 +1,37 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = pd.read_excel('/content/drive/MyDrive/thucnghiem1.xlsx')
+
+fig = plt.figure()
+x = np.array(list(map(int, data['Node'])))
+gacs = np.array(list(map(float, data['GACS'])))
+hflga = np.array(list(map(float, data['HFLGA'])))
+inma = np.array(list(map(float, data['INMA'])))
+gr = np.array(list(map(float, data['GR-GACS'])))
+no= np.array(list(map(float, data['No'])))
+hgha= np.array(list(map(float, data['HGGA'])))
+
+
+plt.plot(x, gacs, marker='s', label='GACS')
+
+plt.plot(x, hflga, marker='^', label='HFLGA')
+
+plt.plot(x, inma, marker='8', label='INMA')
+
+plt.plot(x, gr, marker='v', label='GR-GACS')
+
+plt.plot(x, no, marker='p', label='No Charging')
+
+plt.plot(x, hgha, marker='D', label='HGHA')
+
+plt.xlim(190, 410)
+plt.ylim(0, 70)
+plt.xticks(x,x)
+plt.grid('x', color='0.85',linestyle="--")
+plt.grid('y', color='0.85',linestyle="--")
+plt.ylabel("Number of sensor nodes")
+plt.xlabel("Number of dead sensors")
+plt.legend(loc='upper left')
+plt.show()

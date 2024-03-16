@@ -1,0 +1,13 @@
+- Pha fuzzy sẽ dựa và 3 yếu tố: U/(tổng công suất tiêu thụ của mạng)
+				      Emc/(Tổng công suất của mạng * T)    T là thời gian 1 chu kì
+					p/pn   		Trong đó p là công suất của node đó, pn là công suất chuẩn hóa pn = (emax của sensor - emin của sensor) / T
+- Pha dựng đồ thị thì cần quan tâm 
+      + trimming ratio, ví dụ = 0.8 thì nghĩa là sẽ bỏ đi 80% các node mà ở chu kì đang xét năng lượng của nó không hạ xuống dưới mức năng lượng an toàn nếu không sạc
+	+ Hàm phần thưởng: Hệ số R = 100
+           reward = math.pow(R, tc * self.U / (self.Esafe[node.id] - node.energy + self.T * node.energyCR)) 
+
+		~~ tc là thời gian sạc 
+		~~ (self.Esafe[node.id] - node.energy + self.T * node.energyCR) là thời cần sạc để node đó đạt dc Esafe ở cuối chu kì. Các node do trimming ratio thêm vào sẽ có số mũ âm tương ứng là phần thưởng nhỏ, chỉ làm nhiệm vụ trung gian trong quá trình di chuyển
+      + Epsilon greedy : epsilon = max ( 1 / căn(n) , 0.01) trong đó n là epsilon hiện tại (n từ 1-30000)
+
+		

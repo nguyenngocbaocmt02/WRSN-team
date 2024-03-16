@@ -1,0 +1,32 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = pd.read_excel('/content/drive/MyDrive/Lab/chargingE.xlsx')
+with PdfPages('/content/drive/MyDrive/Lab/charging_energy_pdf.pdf') as export_pdf3:
+
+  fig = plt.figure()
+  x = np.array(list(map(int, data['T'])))
+  hflga = np.array(list(map(float, data['HFLGA'])))
+  inma = np.array(list(map(float, data['INMA'])))
+  rl = np.array(list(map(float, data['RL-Graph'])))
+
+
+  plt.plot(x, hflga, marker='^', label='HFLGA',color="blue")
+
+  plt.plot(x, inma, marker='8', label='INMA',color="green")
+
+  plt.plot(x, rl, marker='v', label='RL-Graph',color="red")
+
+
+
+  plt.xlim(26000, 180000+10000)
+  plt.ylim(0, 900000)
+  plt.xticks(x,x)
+  plt.grid('x', color='0.85',linestyle="--")
+  plt.grid('y', color='0.85',linestyle="--")
+  plt.ylabel("Charging energy")
+  plt.xlabel("Simulated time")
+  plt.legend(loc='upper left')
+  plt.show()
+  export_pdf3.savefig(fig)

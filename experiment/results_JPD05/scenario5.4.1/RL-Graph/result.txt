@@ -1,0 +1,5 @@
+ga150.txt	15.8
+ga175.txt	26.7
+ga250.txt	36.7
+ga225.txt	48.3
+ga200.txt	63.2

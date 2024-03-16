@@ -1,0 +1,33 @@
+Các đặc tính cần làm nổi bật ở thực nghiệm của RL_Graph ( cái này mọi người tham khảo, một thực nghiệm thì lấy 2-3 lý do thôi, , mn để ý để tránh bị trùng ý giữa các thực nghiệm khác nhau. khuyến khích mọi người nghĩ thêm lý do nhá, càng đề cao dc cái thuật toán thì càng tốt, nhưng vẫn phải hợp lí nhé , cái này là mấy cái đặc tính cơ bản thôi):
+- Hệ thống Fuzzy logic đưa ra một ngưỡng an toàn phù hợp với tình trạng hiện tại của mạng cũng như tài nguyên được cung cấp để duy trì mạng. Do đó nó có thể làm việc tốt trong nhiều kịch bản khác nhau của các cảm biến và của MC. 
+
+- Ngưỡng an toàn đảm bảo cho các node có đầy đủ năng lượng để đợi đến lần sạc tiếp theo. Và nó cũng không quá lớn để có thể phân bổ đồng đều các tài nguyên trong mạng, tránh việc sạc quá nhiều cho một node mà bỏ qua các node khác.
+
+- Việc sử dụng trimming ratio khá lớn (0.8) giúp RL-Graph chọn lọc các node cần thiết đưa vào đồ thị nên MC sẽ phân bổ năng lượng hợp lí và kịp thời cho các node thực sự cần sạc. Ngoài ra, việc thêm lượng nhỏ các node mặc dù có năng lượng không xuống dưới mức năng lượng an toàn vào việc dựng đồ thị tạo ra thêm nhiều state chuyển cho quá trình học tăng cường giúp quá trình học đạt kết quả tốt hơn. Đồng thời việc này cũng giảm một phần công việc cho các chu kì sau. Vì 20% các node có thời gian sống ước lượng thấp nhất dc thêm vào là những node có nhiều khả năng thiếu hụt năng lượng ở các vòng sau. Do đó khi số lượng node tăng(công suất tăng ...) thì thuật toán vẫn giữ dc sự ổn định trong khi các thuật toán khác thường bị quá tải...
+
+- Hàm phần thưởng được thiết kế là sự kết hợp giữa một hàm liên tục và một hàm rời rạc. 
+     + Bộ phần liên tục giúp quá trình học tránh rơi vào các cục bộ địa phương và hướng tới mục tiêu tối đa năng lượng sạc. Việc năng lượng sạc cao giúp RL_Graph duy trì mạng trong một thời gian dài. Thêm nữa, việc sử dụng hàm mũ ở bộ phận này tạo sự ưu tiên lớn cho việc sạc để node đó đạt đến ngưỡng an toàn ở cuối chu kì ...
+
+     + Bộ phận rời rạc nhằm khuyến khích việc cứu sống các node có nguy cơ cạn kiệt năng lượng trong vòng sạc hiện tại. 
+     + Việc cân bằng hai yếu tố giúp cân bằng khối lượng công việc giữa vòng sạc hiện tại và các vòng sạc sau. Do đó  giúp RL_Graph duy trì mạng ổn định hơn các thuật toán khác trong hầu hết các kịch bản và tại các thời điểm thực hiện khảo sát khác nhau ...
+
+-   So với các thuật toán khác thì RL-Graph xét đến thời điểm đến các cảm biến giúp quản lý thời gian sạc cho các node hiệu quả hơn. 
+- RL_GRaph Xem xét đến cả lượng tài nguyên được cung cấp nhằm phân bổ một cách hợp lí ...
+-  Ngoài ra nó cũng đặt các phần thưởng lớn hơn cho các thời điểm đến node mà có hiệu quả  về sạc và cứu sống node cao hơn. Do đó việc tối ưu hàm phần thưởng hướng trực tiếp đến mục tiêu của bài toán.
+- Mặc dù sử dụng cơ chế để tính ra một ngưỡng an toàn cố định nhưng trong quá trình xây dựng đồ thị, các đỉnh có thời gian sạc không đủ để giúp node đó đạt ngưỡng an toàn ở cuối chu kì vẫn nhận được một phần thưởng. Do đó cơ chế sạc và quá trình học trở lên linh hoạt và hiệu quả.   
+- 
+
+
+
+Điểm yếu của HFLGA (điểm yếu của các thuật toán khác thì mn có thể đọc phần thực nghiệm của các bài bái trước của nhóm vì 2 thuật toán này nhóm đã dùng một vài lần để so sánh), đây là một số cái:
+- HFLGA chỉ tối ưu số lượng node chết trong một chu kì mà không quan tâm tình trạng mạng trong thời gian dài. Do đó có thể gây ra sự bùng nổ số lượng node chết ở đầu chu kì kế tiếp vì mức năng lượng của các node kể cả những node được sạc là không đủ. Nên HFLGA chỉ phù hợp với mạng có thời gian hoạt động ngắn
+- HFLGA tối thiểu năng lượng di chuyển nên MC có xu hướng ít di chuyển, do đó năng lượng sạc cho các cảm biến phụ thuộc vào số cảm biến trong charging path của thuật toán và thường không ổn định. Điều này ảnh hưởng chất lượng thuật tóaa trong thời gian dài
+- HFLGA chưa quan tâm đến tài nguyên được cung cấp ( tài nguyên của MC) nên việc thích ứng với các kịch bản khác nhau của mạng là kém hiệu quả hơn vs thuật toán đề xuất
+- HFLGA chưa xem xét thời điểm đến thăm các node nên các quyết định sạc có thể là sai lầm (sạc quá ít dẫn đến node đó chết ở cuối chu kì), điều này làm tốn tài nguyên di chuyển đến và sạc cho node đó
+
+
+INMA:
+- Khi số node, công suất các node tăng thì nhiều request gửi, do đó INMA thường bị quá tải và có quyết định sạc sai
+- Việc sạc đầy làm các node khác phải đơi lâu dẫn đến nhiều node chết trước khi được sạc
+- Cơ chế chọn node để sạc đơn giản, không tính đến tình trạng của mạng cũng như tài nguyên của MC
+- 

@@ -1,0 +1,27 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+if __name__ == '__main__':
+    data = pd.read_excel('scenario3_charging.xlsx')
+
+    fig = plt.figure()
+    x = np.array(list(map(float, data['Frequency'])))
+    inma = np.array(list(map(float, data['INMA'])))
+    hflga = np.array(list(map(float, data['HFLGA'])))
+    gr = np.array(list(map(float, data['RL-Graph'])))
+
+    plt.plot(x, inma, marker='8', label='INMA')
+    plt.plot(x, hflga, marker='^', label='HFLGA')
+    plt.plot(x, gr, marker='v', label='RL-Graph')
+
+    plt.subplots_adjust(left=0.18)
+    plt.xlim(0.25, 0.75)
+    plt.ylim(220000, 360000)
+    plt.xticks(x, x)
+    plt.grid('x', color='0.85', linestyle="--")
+    plt.grid('y', color='0.85', linestyle="--")
+    plt.ylabel("Total energy for charging")
+    plt.xlabel("Package generation probability")
+    plt.legend(loc='upper left')
+    plt.show()
